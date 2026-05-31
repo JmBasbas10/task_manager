@@ -1,38 +1,59 @@
 @extends('layouts.auth')
 @section('title', 'Login')
-@section('subtitle', 'Sign in to your account')
 
 @section('content')
-<h5 class="mb-3">Login</h5>
+<h4 class="fw-bold mb-1">Welcome back</h4>
+<p class="text-muted small mb-4">Sign in to your account to continue</p>
 
 @if($errors->any())
-    <div class="alert alert-danger">{{ $errors->first() }}</div>
+    <div class="alert alert-danger py-2 small">
+        <i class="bi bi-exclamation-triangle me-1"></i>{{ $errors->first() }}
+    </div>
 @endif
 
 <form action="{{ route('login') }}" method="POST">
     @csrf
 
     <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" name="email" id="email" class="form-control"
-               value="{{ old('email') }}" required autofocus>
+        <label for="email" class="form-label fw-medium">Email address</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-envelope text-muted"></i>
+            </span>
+            <input type="email" id="email" name="email"
+                   value="{{ old('email') }}"
+                   class="form-control border-start-0 ps-0 @error('email') is-invalid @enderror"
+                   placeholder="you@example.com" autofocus required>
+        </div>
     </div>
 
     <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" id="password" class="form-control" required>
+        <label for="password" class="form-label fw-medium">Password</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-lock text-muted"></i>
+            </span>
+            <input type="password" id="password" name="password"
+                   class="form-control border-start-0 ps-0 @error('password') is-invalid @enderror"
+                   placeholder="••••••••" required>
+        </div>
     </div>
 
-    <div class="mb-3 form-check">
-        <input type="checkbox" name="remember" id="remember" class="form-check-input">
-        <label for="remember" class="form-check-label">Remember me</label>
+    <div class="mb-4">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="remember" name="remember">
+            <label class="form-check-label text-muted small" for="remember">Remember me</label>
+        </div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100">Login</button>
+    <button type="submit" class="btn btn-primary w-100 py-2 fw-medium">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+    </button>
 </form>
 
-<hr>
-<p class="text-center mb-0">
-    Don't have an account? <a href="{{ route('register') }}">Register here</a>
+<hr class="my-4">
+<p class="text-center text-muted small mb-0">
+    Don't have an account?
+    <a href="{{ route('register') }}" class="fw-medium text-decoration-none">Create one</a>
 </p>
 @endsection
