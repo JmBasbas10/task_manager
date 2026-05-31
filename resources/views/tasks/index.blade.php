@@ -8,69 +8,66 @@
     <div class="col-6 col-lg">
         <div class="card stat-card shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                    <i class="bi bi-clipboard2-check"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold lh-1">{{ $stats['total'] }}</div>
-                    <div class="text-muted small">Total</div>
-                </div>
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-clipboard2-check"></i></div>
+                <div><div class="fs-4 fw-bold lh-1">{{ $stats['total'] }}</div><div class="text-muted small">Total</div></div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg">
         <div class="card stat-card shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
-                <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
-                    <i class="bi bi-circle"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold lh-1">{{ $stats['todo'] }}</div>
-                    <div class="text-muted small">To Do</div>
-                </div>
+                <div class="stat-icon bg-secondary bg-opacity-10 text-secondary"><i class="bi bi-circle"></i></div>
+                <div><div class="fs-4 fw-bold lh-1">{{ $stats['todo'] }}</div><div class="text-muted small">To Do</div></div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg">
         <div class="card stat-card shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
-                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold lh-1">{{ $stats['in_progress'] }}</div>
-                    <div class="text-muted small">In Progress</div>
-                </div>
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-arrow-clockwise"></i></div>
+                <div><div class="fs-4 fw-bold lh-1">{{ $stats['in_progress'] }}</div><div class="text-muted small">In Progress</div></div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg">
         <div class="card stat-card shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
-                <div class="stat-icon bg-success bg-opacity-10 text-success">
-                    <i class="bi bi-check2-circle"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold lh-1">{{ $stats['done'] }}</div>
-                    <div class="text-muted small">Done</div>
-                </div>
+                <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-check2-circle"></i></div>
+                <div><div class="fs-4 fw-bold lh-1">{{ $stats['done'] }}</div><div class="text-muted small">Done</div></div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg">
         <div class="card stat-card shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3">
-                <div class="stat-icon bg-danger bg-opacity-10 text-danger">
-                    <i class="bi bi-exclamation-circle"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold lh-1">{{ $stats['overdue'] }}</div>
-                    <div class="text-muted small">Overdue</div>
-                </div>
+                <div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-exclamation-circle"></i></div>
+                <div><div class="fs-4 fw-bold lh-1">{{ $stats['overdue'] }}</div><div class="text-muted small">Overdue</div></div>
             </div>
         </div>
     </div>
 </div>
+
+{{-- Charts --}}
+@if($stats['total'] > 0)
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3">Task Status Overview</h6>
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3">Tasks by Priority</h6>
+                <canvas id="priorityChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 {{-- Filters + Table --}}
 <div class="card table-card shadow-sm">
@@ -146,17 +143,14 @@
                         @foreach($tasks as $task)
                         <tr class="{{ $task->isOverdue() ? 'table-danger bg-opacity-25' : '' }}">
                             <td class="ps-4">
-                                <a href="{{ route('tasks.show', $task) }}"
-                                   class="text-decoration-none fw-medium text-dark">
+                                <a href="{{ route('tasks.show', $task) }}" class="text-decoration-none fw-medium text-dark">
                                     {{ $task->title }}
                                 </a>
                                 @if($task->isOverdue())
                                     <span class="badge bg-danger ms-1 small">Overdue</span>
                                 @endif
                                 @if($task->description)
-                                    <div class="text-muted small text-truncate" style="max-width: 300px;">
-                                        {{ $task->description }}
-                                    </div>
+                                    <div class="text-muted small text-truncate" style="max-width: 300px;">{{ $task->description }}</div>
                                 @endif
                             </td>
                             <td>
@@ -178,8 +172,7 @@
                             <td>
                                 @if($task->due_date)
                                     <span class="{{ $task->isOverdue() ? 'text-danger fw-medium' : 'text-muted' }} small">
-                                        <i class="bi bi-calendar3 me-1"></i>
-                                        {{ $task->due_date->format('M d, Y') }}
+                                        <i class="bi bi-calendar3 me-1"></i>{{ $task->due_date->format('M d, Y') }}
                                     </span>
                                 @else
                                     <span class="text-muted small">—</span>
@@ -187,12 +180,10 @@
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-flex gap-1 justify-content-end">
-                                    <a href="{{ route('tasks.show', $task) }}"
-                                       class="btn btn-sm btn-outline-secondary" title="View">
+                                    <a href="{{ route('tasks.show', $task) }}" class="btn btn-sm btn-outline-secondary" title="View">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('tasks.edit', $task) }}"
-                                       class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <a href="{{ route('tasks.edit', $task) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('tasks.destroy', $task) }}" method="POST"
@@ -221,4 +212,48 @@
         @endif
     </div>
 </div>
+
+@endsection
+
+@section('scripts')
+@if($stats['total'] > 0)
+<script>
+    // Status Doughnut Chart
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['To Do', 'In Progress', 'Done'],
+            datasets: [{
+                data: [{{ $stats['todo'] }}, {{ $stats['in_progress'] }}, {{ $stats['done'] }}],
+                backgroundColor: ['#6c757d', '#0d6efd', '#198754'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Priority Bar Chart
+    new Chart(document.getElementById('priorityChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Low', 'Medium', 'High'],
+            datasets: [{
+                label: 'Tasks',
+                data: [{{ $stats['low'] }}, {{ $stats['medium'] }}, {{ $stats['high'] }}],
+                backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+</script>
+@endif
 @endsection

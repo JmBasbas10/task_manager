@@ -14,6 +14,8 @@
         .stat-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
         .table > tbody > tr > td { vertical-align: middle; }
         .table-card { border: none; border-radius: 12px; }
+        .avatar-sm { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; }
     </style>
 </head>
 <body>
@@ -38,11 +40,24 @@
                         <i class="bi bi-plus-circle me-1"></i>New Task
                     </a>
                 </li>
+                @if(Auth::user()->isAdmin())
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                        <i class="bi bi-people me-1"></i>User Management
+                    </a>
+                </li>
+                @endif
             </ul>
             <ul class="navbar-nav mt-2 mt-lg-0">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle fs-5"></i>
+                        @if(Auth::user()->avatar)
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="avatar-sm" alt="Avatar">
+                        @else
+                            <span class="avatar-placeholder bg-white bg-opacity-25 text-white">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </span>
+                        @endif
                         <span>{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0">
@@ -71,25 +86,51 @@
     </div>
 </nav>
 
-<main class="container py-4">
+{{-- Toast Notifications --}}
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
-            <i class="bi bi-check-circle-fill"></i>
-            <span>{{ session('success') }}</span>
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    <div class="toast text-white bg-success" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
+    </div>
     @endif
     @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
-            <i class="bi bi-exclamation-circle-fill"></i>
-            <span>{{ session('error') }}</span>
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    <div class="toast text-white bg-danger" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
+    </div>
     @endif
+    @if(session('password_success'))
+    <div class="toast text-white bg-success" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-shield-check me-2"></i>{{ session('password_success') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+    @endif
+</div>
 
+<main class="container py-4">
     @yield('content')
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script>
+    document.querySelectorAll('.toast').forEach(function (el) {
+        new bootstrap.Toast(el, { delay: 4000 }).show();
+    });
+</script>
+@yield('scripts')
 </body>
 </html>

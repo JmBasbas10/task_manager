@@ -35,6 +35,9 @@ class TaskController extends Controller
                                 ->whereNotNull('due_date')
                                 ->whereDate('due_date', '<', now())
                                 ->count(),
+            'low'         => $user->tasks()->where('priority', 'low')->count(),
+            'medium'      => $user->tasks()->where('priority', 'medium')->count(),
+            'high'        => $user->tasks()->where('priority', 'high')->count(),
         ];
 
         return view('tasks.index', compact('tasks', 'stats'));
