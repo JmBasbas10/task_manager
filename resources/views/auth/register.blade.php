@@ -1,78 +1,45 @@
 @extends('layouts.auth')
 @section('title', 'Register')
+@section('subtitle', 'Create a new account')
 
 @section('content')
-<h4 class="fw-bold mb-1">Create your account</h4>
-<p class="text-muted small mb-4">Join TaskFlow and start managing your tasks</p>
+<h5 class="mb-3">Register</h5>
 
 @if($errors->any())
-    <div class="alert alert-danger py-2 small">
-        <i class="bi bi-exclamation-triangle me-1"></i>
-        {{ $errors->first() }}
-    </div>
+    <div class="alert alert-danger">{{ $errors->first() }}</div>
 @endif
 
-<form action="{{ route('register') }}" method="POST" novalidate>
+<form action="{{ route('register') }}" method="POST">
     @csrf
 
     <div class="mb-3">
-        <label for="name" class="form-label fw-medium">Full name</label>
-        <div class="input-group">
-            <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-person text-muted"></i>
-            </span>
-            <input type="text" id="name" name="name"
-                   value="{{ old('name') }}"
-                   class="form-control border-start-0 ps-0 @error('name') is-invalid @enderror"
-                   placeholder="John Doe" autofocus required>
-        </div>
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" name="name" id="name" class="form-control"
+               value="{{ old('name') }}" required autofocus>
     </div>
 
     <div class="mb-3">
-        <label for="email" class="form-label fw-medium">Email address</label>
-        <div class="input-group">
-            <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-envelope text-muted"></i>
-            </span>
-            <input type="email" id="email" name="email"
-                   value="{{ old('email') }}"
-                   class="form-control border-start-0 ps-0 @error('email') is-invalid @enderror"
-                   placeholder="you@example.com" required>
-        </div>
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" id="email" class="form-control"
+               value="{{ old('email') }}" required>
     </div>
 
     <div class="mb-3">
-        <label for="password" class="form-label fw-medium">Password</label>
-        <div class="input-group">
-            <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-lock text-muted"></i>
-            </span>
-            <input type="password" id="password" name="password"
-                   class="form-control border-start-0 ps-0 @error('password') is-invalid @enderror"
-                   placeholder="Min. 8 characters" required>
-        </div>
+        <label for="password" class="form-label">Password</label>
+        <input type="password" name="password" id="password" class="form-control" required>
     </div>
 
-    <div class="mb-4">
-        <label for="password_confirmation" class="form-label fw-medium">Confirm password</label>
-        <div class="input-group">
-            <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-lock-fill text-muted"></i>
-            </span>
-            <input type="password" id="password_confirmation" name="password_confirmation"
-                   class="form-control border-start-0 ps-0"
-                   placeholder="Re-enter password" required>
-        </div>
+    <div class="mb-3">
+        <label for="password_confirmation" class="form-label">Confirm Password</label>
+        <input type="password" name="password_confirmation" id="password_confirmation"
+               class="form-control" required>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100 py-2 fw-medium">
-        <i class="bi bi-person-plus me-1"></i>Create Account
-    </button>
+    <button type="submit" class="btn btn-primary w-100">Create Account</button>
 </form>
 
-<hr class="my-4">
-<p class="text-center text-muted small mb-0">
-    Already have an account?
-    <a href="{{ route('login') }}" class="fw-medium text-decoration-none">Sign in</a>
+<hr>
+<p class="text-center mb-0">
+    Already have an account? <a href="{{ route('login') }}">Login here</a>
 </p>
 @endsection
