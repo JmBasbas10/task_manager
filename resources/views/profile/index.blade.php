@@ -41,14 +41,27 @@
                 <p class="text-muted small mb-2">Update profile picture</p>
                 <form action="{{ route('profile.avatar') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
+                    {{-- Preview --}}
+                    <div class="mb-2 d-none" id="previewContainer">
+                        <img id="avatarPreview" src="#" alt="Preview"
+                             class="rounded-circle border mb-2"
+                             style="width: 80px; height: 80px; object-fit: cover;">
+                        <p class="text-muted small mb-1" id="previewFilename"></p>
+                    </div>
+
                     <div class="mb-2">
-                        <input type="file" name="avatar" id="avatar" class="form-control form-control-sm @error('avatar') is-invalid @enderror"
+                        <label for="avatar" class="btn btn-outline-secondary btn-sm w-100">
+                            <i class="bi bi-image me-1"></i>Choose Photo
+                        </label>
+                        <input type="file" name="avatar" id="avatar"
+                               class="d-none @error('avatar') is-invalid @enderror"
                                accept="image/*" required>
                         @error('avatar')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                    <button type="submit" class="btn btn-primary btn-sm w-100" id="uploadBtn" disabled>
                         <i class="bi bi-upload me-1"></i>Upload Photo
                     </button>
                 </form>
@@ -149,4 +162,22 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.getElementById('avatar').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+            document.getElementById('previewFilename').textContent = file.name;
+            document.getElementById('previewContainer').classList.remove('d-none');
+            document.getElementById('uploadBtn').disabled = false;
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
 @endsection
