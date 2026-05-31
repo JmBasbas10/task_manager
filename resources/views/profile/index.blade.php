@@ -18,17 +18,19 @@
         <div class="card border-0 shadow-sm text-center" style="border-radius: 12px;">
             <div class="card-body p-4">
                 {{-- Avatar Display --}}
-                @if($user->avatar)
-                    <img src="{{ asset('storage/' . $user->avatar) }}"
-                         class="rounded-circle mb-3 border"
+                <div class="position-relative d-inline-block mb-3">
+                    <img id="currentAvatar"
+                         src="{{ $user->avatar ? asset('storage/' . $user->avatar) : '' }}"
+                         class="rounded-circle border {{ $user->avatar ? '' : 'd-none' }}"
                          style="width: 100px; height: 100px; object-fit: cover;"
-                         alt="Profile Picture">
-                @else
-                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle"
+                         alt="Profile Picture"
+                         onerror="this.classList.add('d-none'); document.getElementById('avatarFallback').classList.remove('d-none');">
+                    <div id="avatarFallback"
+                         class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle {{ $user->avatar ? 'd-none' : '' }}"
                          style="width: 100px; height: 100px; font-size: 2.5rem; font-weight: 700;">
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
-                @endif
+                </div>
 
                 <h5 class="fw-bold mb-0">{{ $user->name }}</h5>
                 <p class="text-muted small">{{ $user->email }}</p>
@@ -42,14 +44,6 @@
                 <form action="{{ route('profile.avatar') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- Preview --}}
-                    <div class="mb-2 d-none" id="previewContainer">
-                        <img id="avatarPreview" src="#" alt="Preview"
-                             class="rounded-circle border mb-2"
-                             style="width: 80px; height: 80px; object-fit: cover;">
-                        <p class="text-muted small mb-1" id="previewFilename"></p>
-                    </div>
-
                     <div class="mb-2">
                         <label for="avatar" class="btn btn-outline-secondary btn-sm w-100">
                             <i class="bi bi-image me-1"></i>Choose Photo
@@ -57,6 +51,7 @@
                         <input type="file" name="avatar" id="avatar"
                                class="d-none @error('avatar') is-invalid @enderror"
                                accept="image/*" required>
+                        <p class="text-muted small mt-1 mb-0" id="previewFilename"></p>
                         @error('avatar')
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
@@ -172,9 +167,15 @@
 
         const reader = new FileReader();
         reader.onload = function (e) {
-            document.getElementById('avatarPreview').src = e.target.result;
+            // Show preview in the main avatar spot
+            const img = document.getElementById('currentAvatar');
+            const fallback = document.getElementById('avatarFallback');
+
+            img.src = e.target.result;
+            img.classList.remove('d-none');
+            fallback.classList.add('d-none');
+
             document.getElementById('previewFilename').textContent = file.name;
-            document.getElementById('previewContainer').classList.remove('d-none');
             document.getElementById('uploadBtn').disabled = false;
         };
         reader.readAsDataURL(file);
