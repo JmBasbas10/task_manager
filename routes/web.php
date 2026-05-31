@@ -6,21 +6,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
-// Temporary admin setup route — remove after use
-Route::get('/setup-admin', function () {
-    \Illuminate\Support\Facades\DB::table('users')->updateOrInsert(
-        ['email' => 'admin@taskflow.com'],
-        [
-            'name'       => 'Administrator',
-            'email'      => 'admin@taskflow.com',
-            'password'   => bcrypt('Admin@1234'),
-            'role'       => 'admin',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]
-    );
-    return 'Admin account created. You can now log in with admin@taskflow.com / Admin@1234';
-});
 
 Route::get('/', function () {
     return auth()->check()
