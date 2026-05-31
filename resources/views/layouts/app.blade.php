@@ -52,7 +52,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
                         @if(Auth::user()->avatar)
-                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="avatar-sm" alt="Avatar">
+                            <img src="{{ asset(Auth::user()->avatar) }}" class="avatar-sm" alt="Avatar">
                         @else
                             <span class="avatar-placeholder bg-white bg-opacity-25 text-white">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}

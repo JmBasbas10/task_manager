@@ -20,7 +20,7 @@
                 {{-- Avatar Display --}}
                 <div class="position-relative d-inline-block mb-3">
                     <img id="currentAvatar"
-                         src="{{ $user->avatar ? asset('storage/' . $user->avatar) : '' }}"
+                         src="{{ $user->avatar ? asset($user->avatar) : '' }}"
                          class="rounded-circle border {{ $user->avatar ? '' : 'd-none' }}"
                          style="width: 100px; height: 100px; object-fit: cover;"
                          alt="Profile Picture"

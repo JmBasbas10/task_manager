@@ -22,7 +22,7 @@
         <div class="card border-0 shadow-sm text-center" style="border-radius: 12px;">
             <div class="card-body p-4">
                 @if($user->avatar)
-                    <img src="{{ asset('storage/' . $user->avatar) }}"
+                    <img src="{{ asset($user->avatar) }}"
                          class="rounded-circle mb-3 border"
                          style="width:100px;height:100px;object-fit:cover;" alt="">
                 @else
