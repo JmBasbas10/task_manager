@@ -65,13 +65,10 @@
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 @if($user->id !== Auth::id() && $user->role !== 'admin')
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                      onsubmit="return confirm('Delete user {{ $user->name }}? This will also delete all their tasks.')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="confirmDelete('{{ route('admin.users.destroy', $user) }}', 'Delete user {{ addslashes($user->name) }}? All their tasks will also be deleted.')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                                 @endif
                             </div>
                         </td>

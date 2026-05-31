@@ -101,13 +101,10 @@
         <div class="card border-0 shadow-sm border border-danger border-opacity-25" style="border-radius: 12px;">
             <div class="card-body p-4">
                 <h6 class="text-danger text-uppercase small fw-bold mb-3">Danger Zone</h6>
-                <form action="{{ route('tasks.destroy', $task) }}" method="POST"
-                      onsubmit="return confirm('Permanently delete this task? This cannot be undone.')">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                        <i class="bi bi-trash me-1"></i>Delete This Task
-                    </button>
-                </form>
+                <button type="button" class="btn btn-outline-danger btn-sm w-100"
+                    onclick="confirmDelete('{{ route('tasks.destroy', $task) }}', 'Permanently delete &quot;{{ addslashes($task->title) }}&quot;? This cannot be undone.')">
+                    <i class="bi bi-trash me-1"></i>Delete This Task
+                </button>
             </div>
         </div>
     </div>

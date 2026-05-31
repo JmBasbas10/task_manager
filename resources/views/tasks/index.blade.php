@@ -220,13 +220,10 @@
                                     <a href="{{ route('tasks.edit', $task) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <form action="{{ route('tasks.destroy', $task) }}" method="POST"
-                                          onsubmit="return confirm('Delete this task?')">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" title="Delete"
+                                        onclick="confirmDelete('{{ route('tasks.destroy', $task) }}', 'Delete task: {{ addslashes($task->title) }}? This cannot be undone.')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
