@@ -50,19 +50,53 @@
 {{-- Charts --}}
 @if($stats['total'] > 0)
 <div class="row g-3 mb-4">
-    <div class="col-md-6">
-        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-            <div class="card-body p-4">
-                <h6 class="fw-bold mb-3">Task Status Overview</h6>
-                <canvas id="statusChart" height="200"></canvas>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+            <div class="card-body p-3">
+                <p class="text-muted small fw-medium mb-2">Status Overview</p>
+                <canvas id="statusChart" height="160"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-            <div class="card-body p-4">
-                <h6 class="fw-bold mb-3">Tasks by Priority</h6>
-                <canvas id="priorityChart" height="200"></canvas>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+            <div class="card-body p-3">
+                <p class="text-muted small fw-medium mb-2">Tasks by Priority</p>
+                <canvas id="priorityChart" height="160"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+            <div class="card-body p-3 d-flex flex-column justify-content-center">
+                <p class="text-muted small fw-medium mb-3">Completion Rate</p>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>Done</span>
+                        <span class="text-success fw-medium">{{ $stats['total'] > 0 ? round(($stats['done'] / $stats['total']) * 100) : 0 }}%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: {{ $stats['total'] > 0 ? ($stats['done'] / $stats['total']) * 100 : 0 }}%"></div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>In Progress</span>
+                        <span class="text-primary fw-medium">{{ $stats['total'] > 0 ? round(($stats['in_progress'] / $stats['total']) * 100) : 0 }}%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-primary" style="width: {{ $stats['total'] > 0 ? ($stats['in_progress'] / $stats['total']) * 100 : 0 }}%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>To Do</span>
+                        <span class="text-secondary fw-medium">{{ $stats['total'] > 0 ? round(($stats['todo'] / $stats['total']) * 100) : 0 }}%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-secondary" style="width: {{ $stats['total'] > 0 ? ($stats['todo'] / $stats['total']) * 100 : 0 }}%"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -218,7 +252,6 @@
 @section('scripts')
 @if($stats['total'] > 0)
 <script>
-    // Status Doughnut Chart
     new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
         data: {
@@ -232,26 +265,29 @@
         },
         options: {
             responsive: true,
-            plugins: { legend: { position: 'bottom' } }
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+            }
         }
     });
 
-    // Priority Bar Chart
     new Chart(document.getElementById('priorityChart'), {
         type: 'bar',
         data: {
             labels: ['Low', 'Medium', 'High'],
             datasets: [{
-                label: 'Tasks',
                 data: [{{ $stats['low'] }}, {{ $stats['medium'] }}, {{ $stats['high'] }}],
                 backgroundColor: ['#198754', '#ffc107', '#dc3545'],
-                borderRadius: 6
+                borderRadius: 4
             }]
         },
         options: {
             responsive: true,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } } },
+                x: { ticks: { font: { size: 11 } } }
+            }
         }
     });
 </script>
