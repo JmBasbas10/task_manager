@@ -2,19 +2,35 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@taskflow.com'],
-            [
-                'name'     => 'Administrator',
-                'password' => 'Admin@1234',
-                'role'     => 'admin',
-            ]
-        );
+        $email = 'admin@taskflow.com';
+        $hashed = Hash::make('Admin@1234');
+
+        $exists = DB::table('users')->where('email', $email)->exists();
+
+        if ($exists) {
+            DB::table('users')->where('email', $email)->update([
+                'name'       => 'Administrator',
+                'password'   => $hashed,
+                'role'       => 'admin',
+                'updated_at' => now(),
+            ]);
+        } else {
+            DB::table('users')->insert([
+                'name'       => 'Administrator',
+                'email'      => $email,
+                'password'   => $hashed,
+                'role'       => 'admin',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }
